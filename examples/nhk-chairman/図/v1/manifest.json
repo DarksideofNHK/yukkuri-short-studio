@@ -1,0 +1,172 @@
+{
+  "assets": [
+    {
+      "path": "seats_00_dark.png",
+      "size": [
+        1080,
+        800
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "seats_01_lit.png",
+      "size": [
+        1080,
+        800
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "seats_02_lit.png",
+      "size": [
+        1080,
+        800
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "seats_03_lit.png",
+      "size": [
+        1080,
+        800
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "seats_04_lit.png",
+      "size": [
+        1080,
+        800
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "seats_05_lit.png",
+      "size": [
+        1080,
+        800
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "seats_06_lit.png",
+      "size": [
+        1080,
+        800
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "seats_07_lit.png",
+      "size": [
+        1080,
+        800
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "seats_08_lit.png",
+      "size": [
+        1080,
+        800
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "seats_09_lit.png",
+      "size": [
+        1080,
+        800
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "seats_10_ninth_off.png",
+      "size": [
+        1080,
+        800
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "flow_all.png",
+      "size": [
+        1080,
+        1300
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "flow_01_pm.png",
+      "size": [
+        1080,
+        1300
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "flow_02_committee.png",
+      "size": [
+        1080,
+        1300
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "flow_03_chair_frame.png",
+      "size": [
+        1080,
+        1300
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "viewer_house.png",
+      "size": [
+        400,
+        400
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "viewer_arrow_up.png",
+      "size": [
+        400,
+        400
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "viewer_cross.png",
+      "size": [
+        400,
+        400
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "一覧.png",
+      "size": [
+        1600,
+        1900
+      ],
+      "mode": "RGBA"
+    }
+  ],
+  "seat_order": "左上から右へ4列、上から下へ3行",
+  "colors": {
+    "lit": "#FFE600",
+    "dark": "#666E79",
+    "cross": "#F52222"
+  },
+  "flow_layers": "3枚とも1080×1300。同じ位置で重ねるとflow_all.pngと一致。第2・第3段は直前の矢印を含む。",
+  "chair_safe_area": [
+    450,
+    963,
+    630,
+    1283
+  ],
+  "viewer_parts": "各400×400。家と上向き点線矢印と×は別配置。矢印の先端は(200,57)。届かない隙間を編集で空ける。",
+  "ninth_off": "seats_10_ninth_off.pngはseats_08_lit.pngと同一の8人点灯状態。9枚目から切り替える。",
+  "overview": "一覧.pngのファイル名ラベルは確認用。動画用18枚には文字なし。"
+}

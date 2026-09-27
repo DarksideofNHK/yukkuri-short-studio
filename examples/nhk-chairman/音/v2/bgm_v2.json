@@ -1,0 +1,68 @@
+{
+ "src": "examples/nhk-chairman/Premiere読み込み用/_NHK会長編_v2_BGMなし",
+ "dst": "examples/nhk-chairman/Premiere読み込み用/NHK会長編_v2",
+ "old_tag": "v2_BGMなし",
+ "new_tag": "v2",
+ "clips": [
+  {
+   "name": "BGM_本編_ElevenLabs_v2b",
+   "label": "本編：ElevenLabs Music（music_v2・seed 2026・plan_v2.json）。曲の14.41秒のドロップを、井上会長が出るところ（405f）に合わせた",
+   "file": "examples/nhk-chairman/音/v2/bgm_v2_b.mp3",
+   "in_sec": 0.91,
+   "start_f": 0,
+   "end_f": "E",
+   "target_rel": -12,
+   "cap_rel": -6,
+   "fade_in_f": 0,
+   "fade_out_f": 6,
+   "lifts": [
+    [
+     0,
+     3
+    ],
+    [
+     80,
+     3
+    ],
+    [
+     92,
+     0
+    ]
+   ],
+   "source": "ElevenLabs"
+  },
+  {
+   "name": "BGM_締め_ElevenLabs_v2b_頭の一打",
+   "label": "締め：同じ曲の頭（一打）をエンドカードに。ショートが頭に戻ったとき同じ音でつながる",
+   "file": "examples/nhk-chairman/音/v2/bgm_v2_b.mp3",
+   "in_sec": 0.0,
+   "start_f": "E",
+   "end_f": "Z",
+   "target_rel": -12,
+   "cap_rel": -6,
+   "fade_in_f": 0,
+   "fade_out_f": 40,
+   "lifts": [
+    [
+     0,
+     2
+    ]
+   ],
+   "source": "ElevenLabs"
+  }
+ ],
+ "markers": [
+  {
+   "at": 405,
+   "text": "曲のドロップ＝井上会長が出る"
+  },
+  {
+   "at": "E",
+   "text": "締め：曲の頭の一打"
+  }
+ ],
+ "alternates": [
+  "examples/nhk-chairman/音/v2/bgm_v2_a.mp3"
+ ],
+ "ending_note": "- 締め：最後の行（「会長選びに、…一票はない。それが、NHK会長の決め方だ。」）まで本編の曲が続き、エンドカード（最後の2.5秒）で同じ曲の頭の一打をもう一度鳴らして消す。ショートが頭に戻ったとき同じ音でつながる"
+}

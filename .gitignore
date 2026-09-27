@@ -1,0 +1,30 @@
+# 音源・音声・動画（権利と容量のため入れない）
+*.wav
+!examples/nhk-chairman/音/v1/自作/*.wav
+*.mp3
+*.m4a
+*.mov
+*.mp4
+!examples/nhk-chairman/公開/demo/*.mp4
+*.prproj
+Premiere読み込み用/
+media/
+media_anim/
+Adobe Premiere Pro Auto-Save/
+
+# 作業の生成物
+__pycache__/
+.runtime/
+*.log
+codex_stdout.log
+timeline.json
+anchor_times.json
+board.html
+.tasks.lock
+tasks.json.tmp
+
+# 秘密
+.env
+.env.*
+
+.DS_Store

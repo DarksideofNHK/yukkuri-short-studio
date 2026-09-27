@@ -1,0 +1,45 @@
+{
+  "date": "2026-09-28",
+  "person_id": "inoue_tatsuhiko",
+  "name": "井上樹彦",
+  "status": "ユーザー確認前・目視照合",
+  "reference_pages": [
+    "https://www.phileweb.com/news/d-av/202302/14/57515.html",
+    "https://toyokeizai.net/articles/-/924623?display=b"
+  ],
+  "reference_image": "https://tk.ismcdn.jp/mwimgs/2/7/1140/img_2739d288ccf75dab485d3b00ef031add81610.jpg",
+  "files": [
+    {
+      "name": "NHK_井上樹彦_v2_01_ぽかん",
+      "original": "元サイズ/NHK_井上樹彦_v2_01_ぽかん.png",
+      "video": "透過PNG/NHK_井上樹彦_v2_01_ぽかん.png",
+      "bbox": [
+        86,
+        90,
+        279,
+        509
+      ],
+      "size": [
+        1080,
+        1920
+      ]
+    },
+    {
+      "name": "NHK_井上樹彦_v2_02_困り顔",
+      "original": "元サイズ/NHK_井上樹彦_v2_02_困り顔.png",
+      "video": "透過PNG/NHK_井上樹彦_v2_02_困り顔.png",
+      "bbox": [
+        86,
+        90,
+        284,
+        509
+      ],
+      "size": [
+        1080,
+        1920
+      ]
+    }
+  ],
+  "changes": "髪型、輪郭、眼鏡、目鼻、唇と陰影をJS Paint GUIで描き直し。Pillowは拡大と比較画像の配置に使用。",
+  "validation": "透過・寸法・余白を確認。y352以降の胴体は旧版と一致。建物は旧版を変更せず同梱。"
+}

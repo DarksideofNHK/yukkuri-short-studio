@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>制作ボード</title>
+<style>
+:root{
+  --bg:#f3f2ee;--panel:#ffffff;--soft:#ecebe6;--ink:#1c1c1e;--sub:#66666d;--line:#dfddd6;
+  --acc:#2f5bd3;--ok:#1f7a45;--ng:#c62f2f;--warn:#a86300;--you:#c2185b;
+  --a-claude:#c8610a;--a-sub:#9a6a12;--a-codex:#0e7f6c;--a-gemini:#2f63c9;--a-grok:#5b606b;--a-user:#c2185b;
+  --shadow:0 1px 2px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#151618;--panel:#1f2023;--soft:#26272b;--ink:#ececef;--sub:#a1a1a9;--line:#34353a;
+  --acc:#86a8ff;--ok:#5fd08f;--ng:#ff7a7a;--warn:#f0b54d;--you:#ff79b0;
+  --a-claude:#ff9a4d;--a-sub:#e0b24d;--a-codex:#4fd1b8;--a-gemini:#7ea8ff;--a-grok:#a3a8b3;--a-user:#ff79b0;
+  --shadow:none;
+}}
+:root[data-theme=dark]{
+  --bg:#151618;--panel:#1f2023;--soft:#26272b;--ink:#ececef;--sub:#a1a1a9;--line:#34353a;
+  --acc:#86a8ff;--ok:#5fd08f;--ng:#ff7a7a;--warn:#f0b54d;--you:#ff79b0;
+  --a-claude:#ff9a4d;--a-sub:#e0b24d;--a-codex:#4fd1b8;--a-gemini:#7ea8ff;--a-grok:#a3a8b3;--a-user:#ff79b0;
+  --shadow:none;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 "Hiragino Sans","Hiragino Kaku Gothic ProN",system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 16px 8px}
+.bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+h1{font-size:17px;margin:0;font-weight:700}
+.upd{color:var(--sub);font-size:12px}
+.live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:4px}
+.live.off{background:var(--ng)}
+.sp{flex:1}
+.btn{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:6px 12px;cursor:pointer}
+.btn:hover{border-color:var(--sub)}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.ng{border-color:var(--ng);color:var(--ng)}
+.btn:disabled{opacity:.4;cursor:default}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{border:1px solid var(--line);border-radius:99px;padding:2px 10px;font-size:12px;cursor:pointer;background:var(--panel)}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:1px}
+main{padding:12px 16px 40px}
+.you{background:var(--panel);border:1px solid var(--you);border-radius:12px;padding:10px 12px;margin-bottom:14px;box-shadow:var(--shadow)}
+.you h2{margin:0 0 8px;font-size:14px;color:var(--you)}
+.you .row{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+.ycard{min-width:280px;max-width:340px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--bg)}
+.ycard .why{font-size:12px;color:var(--sub);margin:2px 0 6px}
+.ycard textarea{width:100%;min-height:44px;border:1px solid var(--line);border-radius:6px;padding:4px 6px;background:var(--panel);resize:vertical}
+.ycard .acts{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.empty{color:var(--sub);font-size:13px}
+.board{display:grid;grid-template-columns:repeat(6,minmax(190px,1fr));gap:10px}
+@media (max-width:1100px){.board{grid-template-columns:repeat(3,minmax(190px,1fr))}}
+@media (max-width:640px){.board{grid-template-columns:1fr}}
+.col{background:var(--soft);border-radius:10px;padding:8px;min-height:120px}
+.col h3{margin:2px 4px 8px;font-size:13px;color:var(--sub);display:flex;justify-content:space-between}
+.col.c-ready h3{color:var(--acc)} .col.c-blocked h3{color:var(--ng)} .col.c-review h3{color:var(--warn)}
+.card{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--oc,var(--line));border-radius:8px;padding:7px 9px;margin-bottom:7px;cursor:pointer;box-shadow:var(--shadow)}
+.card:hover{border-color:var(--sub);border-left-color:var(--oc)}
+.card.mine{outline:2px solid var(--you);outline-offset:1px}
+.c-done .card{opacity:.62}
+.ctop{display:flex;justify-content:space-between;font-size:11.5px;color:var(--sub)}
+.ctitle{font-weight:600;margin:2px 0 3px}
+.cown{font-size:12px;color:var(--oc)}
+.cmeta{font-size:11.5px;color:var(--sub)}
+.tag{display:inline-block;font-size:11px;border:1px solid currentColor;border-radius:99px;padding:0 6px;margin:4px 4px 0 0}
+.t-you{color:var(--you)} .t-paid{color:var(--warn)} .t-ng{color:var(--ng)} .t-rep{color:var(--ok)}
+.cnote{font-size:12px;margin-top:4px;color:var(--ink);background:var(--soft);border-radius:6px;padding:3px 6px}
+details.log{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+details.log summary{cursor:pointer;color:var(--sub)}
+.logbody{font-size:12.5px;max-height:360px;overflow:auto}
+/* drawer */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:10;display:none}
+.ov.on{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--panel);z-index:11;transform:translateX(100%);transition:transform .18s ease;overflow-y:auto;border-left:1px solid var(--line)}
+.drawer.on{transform:none}
+.dh{position:sticky;top:0;background:var(--panel);padding:12px 16px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:flex-start}
+.dh h2{font-size:16px;margin:0;flex:1}
+.db{padding:12px 16px 30px}
+.db h4{margin:16px 0 6px;font-size:13px;color:var(--sub)}
+.pill{display:inline-block;font-size:12px;border-radius:99px;padding:1px 8px;background:var(--soft)}
+.kv{font-size:13px}
+.kv code,.md code{background:var(--soft);border-radius:4px;padding:0 4px;font-size:12.5px}
+.chk{font-size:13px;margin:2px 0}
+.imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.imgs a{display:block;border:1px solid var(--line);border-radius:6px;background:repeating-conic-gradient(var(--soft) 0 25%,transparent 0 50%) 0 0/16px 16px;aspect-ratio:1;overflow:hidden}
+.imgs img{width:100%;height:100%;object-fit:contain}
+.imgs small{display:block;font-size:10.5px;color:var(--sub);word-break:break-all}
+.md{font-size:13px;overflow-x:auto}
+.md table{border-collapse:collapse;font-size:12px;margin:6px 0}
+.md th,.md td{border:1px solid var(--line);padding:3px 6px;vertical-align:top}
+.md pre{background:var(--soft);padding:8px;border-radius:6px;white-space:pre-wrap}
+.md h1,.md h2,.md h3{font-size:14px;margin:12px 0 4px}
+.actbox{margin-top:18px;border-top:1px solid var(--line);padding-top:12px}
+.actbox textarea{width:100%;min-height:64px;border:1px solid var(--line);border-radius:6px;padding:6px;background:var(--bg)}
+.actbox .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.memo{font-size:12.5px;border-left:3px solid var(--you);padding:2px 8px;margin:4px 0}
+.memo small{color:var(--sub)}
+/* dialog */
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink);width:min(420px,92vw)}
+dialog label{display:block;font-size:12px;color:var(--sub);margin-top:10px}
+dialog input,dialog select,dialog textarea{width:100%;border:1px solid var(--line);border-radius:6px;padding:6px;background:var(--bg)}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;z-index:20;display:none;max-width:90vw}
+.toast.err{background:var(--ng);color:#fff}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <h1 id="title">制作ボード</h1>
+    <span class="upd"><span class="live" id="live"></span><span id="upd"></span></span>
+    <span class="sp"></span>
+    <button class="btn" id="addBtn">＋ カードを足す</button>
+  </div>
+  <div class="chips" id="chips"></div>
+</header>
+<main>
+  <section class="you" id="you"></section>
+  <section class="board" id="board"></section>
+  <details class="log"><summary>作業ログ（新しいものが下）</summary><div class="logbody md" id="log"></div></details>
+</main>
+<div class="ov" id="ov"></div>
+<aside class="drawer" id="drawer"></aside>
+<dialog id="addDlg">
+  <form method="dialog" id="addForm">
+    <strong>カードを足す</strong>
+    <label>題名<input name="title" required placeholder="例：サムネイルの案を3つ"></label>
+    <label>工程<select name="phase" id="addPhase"></select></label>
+    <label>担当<select name="owner" id="addOwner"></select></label>
+    <label>メモ（やってほしいこと・気になること）<textarea name="note" rows="3"></textarea></label>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+      <button class="btn" value="cancel" formnovalidate>やめる</button>
+      <button class="btn pri" value="ok">足す</button>
+    </div>
+  </form>
+</dialog>
+<div class="toast" id="toast"></div>
+<script>
+const COLS=[["todo","待ち"],["ready","着手可"],["doing","作業中"],["review","確認待ち"],["blocked","詰まり"],["done","完了"]];
+const JA=Object.fromEntries(COLS);
+const S={data:null,filter:"all",open:null,drafts:{}};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function ocolor(o){if(o==="claude-main")return"var(--a-claude)";if(o.startsWith("claude-sub"))return"var(--a-sub)";if(o.startsWith("codex"))return"var(--a-codex)";if(o.startsWith("gemini"))return"var(--a-gemini)";if(o==="grok")return"var(--a-grok)";if(o==="user")return"var(--a-user)";return"var(--line)"}
+async function api(p,o){const r=await fetch(p,o);let j={};try{j=await r.json()}catch(e){}if(!r.ok)throw new Error(j.msg||("エラー "+r.status));return j}
+function toast(m,err){const t=$("toast");t.textContent=m;t.className="toast"+(err?" err":"");t.style.display="block";clearTimeout(t._h);t._h=setTimeout(()=>t.style.display="none",err?6000:2600)}
+
+function md(src){ // 小さな Markdown 表示（見出し・表・箇条書き・コード・太字・リンク）
+  const L=String(src||"").replace(/\r/g,"").split("\n");let h="",i=0;
+  const inl=s=>esc(s).replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>").replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+  while(i<L.length){const l=L[i];
+    if(/^```/.test(l)){let b=[];i++;while(i<L.length&&!/^```/.test(L[i]))b.push(L[i++]);i++;h+="<pre>"+esc(b.join("\n"))+"</pre>";continue}
+    if(/^\s*\|/.test(l)){let rows=[];while(i<L.length&&/^\s*\|/.test(L[i]))rows.push(L[i++]);
+      rows=rows.filter(r=>!/^\s*\|[\s:|-]+\|\s*$/.test(r));h+="<table>"+rows.map((r,k)=>"<tr>"+r.trim().replace(/^\||\|$/g,"").split("|").map(c=>k?"<td>"+inl(c.trim())+"</td>":"<th>"+inl(c.trim())+"</th>").join("")+"</tr>").join("")+"</table>";continue}
+    if(/^#{1,4}\s/.test(l)){h+="<h3>"+inl(l.replace(/^#+\s/,""))+"</h3>";i++;continue}
+    if(/^\s*([-*]|\d+\.)\s/.test(l)){let it=[];while(i<L.length&&/^\s*([-*]|\d+\.)\s/.test(L[i]))it.push(L[i++].replace(/^\s*([-*]|\d+\.)\s/,""));h+="<ul>"+it.map(x=>"<li>"+inl(x)+"</li>").join("")+"</ul>";continue}
+    if(l.trim()===""){i++;continue}
+    h+="<p>"+inl(l)+"</p>";i++}
+  return h}
+
+function needWhy(t){if(t.owner==="user")return t.note||"あなたの判断が要ります";return"仕上がりの確認（OK で完了）"}
+function card(t){
+  const tags=[];
+  if(t.user_gate)tags.push('<span class="tag t-you">あなたの確認</span>');
+  if(t.paid)tags.push('<span class="tag t-paid">従量課金</span>');
+  const ng=(t.checks||[]).filter(c=>!c.ok).length;if(ng)tags.push(`<span class="tag t-ng">条件NG ${ng}</span>`);
+  if(t.has_report&&t.view!=="done")tags.push('<span class="tag t-rep">報告あり</span>');
+  const memo=(t.memos||[]).slice(-1)[0];
+  const note=t.decision?"決定："+t.decision:(t.note||(memo?"メモ："+memo.text:""));
+  return `<div class="card ${t.needs_user?"mine":""}" style="--oc:${ocolor(t.owner)}" data-id="${esc(t.id)}">
+    <div class="ctop"><b>${esc(t.id)}</b><span>${esc(t.phase)}</span></div>
+    <div class="ctitle">${esc(t.title)}</div>
+    <div class="cown">${esc(t.owner_label)}</div>
+    ${t.depends_on&&t.depends_on.length?`<div class="cmeta">前提 ${esc(t.depends_on.join("・"))}</div>`:""}
+    ${note?`<div class="cnote">${esc(note)}</div>`:""}
+    <div>${tags.join("")}</div></div>`}
+
+function render(){
+  const d=S.data;if(!d)return;
+  $("title").textContent=d.title||"制作ボード";document.title=(d.title||"制作ボード");
+  $("upd").textContent="更新 "+(d.updated||"-")+"・5秒ごとに自動で読み直し";
+  // 担当の絞り込み
+  const owners=[...new Set(d.tasks.map(t=>t.owner))];
+  $("chips").innerHTML=[["all","すべて"],["you","あなたの番"],...owners.map(o=>[o,d.agents[o]||o])].map(([k,v])=>
+    `<span class="chip ${S.filter===k?"on":""}" data-f="${esc(k)}">${k!=="all"&&k!=="you"?`<span class="dot" style="background:${ocolor(k)}"></span>`:""}${esc(v)}</span>`).join("");
+  // あなたの番
+  const mine=d.tasks.filter(t=>t.needs_user);
+  $("you").innerHTML=`<h2>あなたの番（${mine.length}件）</h2>`+(mine.length?`<div class="row">${mine.map(t=>`
+    <div class="ycard"><div class="ctop"><b>${esc(t.id)}</b><span>${esc(t.phase)}</span></div>
+      <div class="ctitle">${esc(t.title)}</div><div class="why">${esc(needWhy(t))}</div>
+      <textarea data-draft="${esc(t.id)}" placeholder="${t.owner==="user"?"決めたこと（例：名前は入れる）":"コメント（差し戻すときは理由）"}">${esc(S.drafts[t.id]||"")}</textarea>
+      <div class="acts"><button class="btn ok" data-act="approve" data-id="${esc(t.id)}">${t.owner==="user"?"決めた（完了）":"OK（完了）"}</button>
+      ${t.owner!=="user"?`<button class="btn ng" data-act="sendback" data-id="${esc(t.id)}">差し戻し</button>`:""}
+      <button class="btn" data-open="${esc(t.id)}">くわしく</button></div></div>`).join("")}</div>`:`<div class="empty">いまはありません。AI たちが作業中です。</div>`);
+  // 看板
+  const f=S.filter,show=t=>f==="all"||(f==="you"?t.needs_user:t.owner===f);
+  $("board").innerHTML=COLS.map(([k,v])=>{const cs=d.tasks.filter(t=>t.view===k&&show(t));
+    return `<div class="col c-${k}"><h3><span>${v}</span><span>${cs.length}</span></h3>${cs.map(card).join("")}</div>`}).join("");
+  $("log").innerHTML=md(d.log);
+}
+async function refresh(){
+  const a=document.activeElement;if(a&&a.dataset&&a.dataset.draft!==undefined)return; // 入力中は描き直さない
+  try{S.data=await api("/api/state");$("live").classList.remove("off");render()}catch(e){$("live").classList.add("off");$("upd").textContent="サーバーにつながりません（studio.py serve が止まっている？）"}
+}
+async function act(action,id,note,force){
+  try{const j=await api("/api/action",{method:"POST",headers:{"Content-Type":"application/json","X-Studio":"1"},body:JSON.stringify({action,id,note,force})});
+    toast(j.msg||"反映しました");delete S.drafts[id];await refresh();if(S.open===id)openDrawer(id)}
+  catch(e){if(/受け入れ条件/.test(e.message)&&!force&&confirm(e.message+"\n\nそれでも完了にしますか？"))return act(action,id,note,true);toast(e.message,true)}
+}
+async function openDrawer(id){
+  S.open=id;const t=S.data.tasks.find(x=>x.id===id);if(!t)return;
+  let det={brief:"",report:"",images:[]};try{det=await api("/api/task?id="+encodeURIComponent(id))}catch(e){}
+  const by=Object.fromEntries(S.data.tasks.map(x=>[x.id,x]));
+  const li=a=>(a&&a.length)?"<ul>"+a.map(x=>`<li><code>${esc(x)}</code></li>`).join("")+"</ul>":"<div class='empty'>なし</div>";
+  const canOk=t.view!=="done"&&(["review","doing"].includes(t.status)||(t.owner==="user"&&t.view==="ready"));
+  $("drawer").innerHTML=`<div class="dh"><div style="flex:1"><div class="ctop"><b>${esc(t.id)}</b><span>${esc(t.phase)}</span></div><h2>${esc(t.title)}</h2>
+      <div style="margin-top:4px"><span class="pill">${JA[t.view]}</span> <span class="cown" style="--oc:${ocolor(t.owner)};color:var(--oc)">${esc(t.owner_label)}</span></div></div>
+      <button class="btn" id="closeD">閉じる</button></div>
+    <div class="db">
+      ${t.goal?`<h4>目的</h4><div class="kv">${esc(t.goal)}</div>`:""}
+      ${t.do&&t.do.length?`<h4>やること</h4><ol class="kv">${t.do.map(x=>"<li>"+esc(x)+"</li>").join("")}</ol>`:""}
+      <h4>前提の作業</h4>${(t.depends_on||[]).length?t.depends_on.map(x=>`<div class="kv">${esc(x)} ${esc(by[x]?by[x].title:"")}（${by[x]?JA[by[x].view]:"?"}）</div>`).join(""):"<div class='empty'>なし</div>"}
+      <h4>入力</h4>${li(t.inputs)}<h4>出力</h4>${li(t.outputs)}
+      ${(t.checks||[]).length?`<h4>受け入れ条件の点検</h4>${t.checks.map(c=>`<div class="chk">${c.ok?"✅":"❌"} ${esc(c.what)}</div>`).join("")}`:""}
+      ${t.decision?`<h4>決まったこと</h4><div class="kv">${esc(t.decision)}</div>`:""}
+      ${(t.memos||[]).length?`<h4>メモ</h4>${t.memos.map(m=>`<div class="memo">${esc(m.text)}<br><small>${esc(m.by)}・${esc(m.at)}</small></div>`).join("")}`:""}
+      ${det.images.length?`<h4>できたもの（${det.images.length}）</h4><div class="imgs">${det.images.map(p=>`<div><a href="/file?path=${encodeURIComponent(p)}" target="_blank"><img loading="lazy" src="/file?path=${encodeURIComponent(p)}" alt=""></a><small>${esc(p.split("/").pop())}</small></div>`).join("")}</div>`:""}
+      ${det.report?`<h4>報告（${esc(t.dir)}/報告.md）</h4><div class="md">${md(det.report)}</div>`:""}
+      ${det.brief?`<details><summary style="cursor:pointer;color:var(--sub);margin-top:14px">依頼書（brief.md）を見る</summary><div class="md">${md(det.brief)}</div></details>`:""}
+      <div class="actbox"><textarea id="dNote" placeholder="${t.owner==="user"?"決めたこと":"コメント・差し戻しの理由・メモ"}"></textarea>
+        <div class="acts">
+          <button class="btn ok" data-dact="approve" ${canOk?"":"disabled"}>${t.owner==="user"?"決めた（完了）":"OK（完了）"}</button>
+          <button class="btn ng" data-dact="sendback" ${t.view==="todo"?"disabled":""}>差し戻し</button>
+          <button class="btn" data-dact="memo">メモを残す</button>
+        </div></div>
+    </div>`;
+  $("drawer").classList.add("on");$("ov").classList.add("on");
+}
+function closeDrawer(){S.open=null;$("drawer").classList.remove("on");$("ov").classList.remove("on")}
+
+document.addEventListener("click",e=>{
+  const c=e.target.closest(".chip");if(c){S.filter=c.dataset.f;render();return}
+  const o=e.target.closest("[data-open]");if(o){openDrawer(o.dataset.open);return}
+  const b=e.target.closest("[data-act]");if(b){const id=b.dataset.id;const note=(document.querySelector(`[data-draft="${CSS.escape(id)}"]`)||{}).value||"";act(b.dataset.act,id,note);return}
+  const d=e.target.closest("[data-dact]");if(d){act(d.dataset.dact,S.open,$("dNote").value);return}
+  if(e.target.id==="closeD"||e.target.id==="ov"){closeDrawer();return}
+  const k=e.target.closest(".card");if(k){openDrawer(k.dataset.id)}
+});
+document.addEventListener("input",e=>{if(e.target.dataset&&e.target.dataset.draft!==undefined)S.drafts[e.target.dataset.draft]=e.target.value});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDrawer()});
+$("addBtn").onclick=()=>{const d=S.data;if(!d)return;
+  $("addPhase").innerHTML=[...d.phases,"その他"].map(p=>`<option>${esc(p)}</option>`).join("");
+  $("addOwner").innerHTML=Object.entries(d.agents).map(([k,v])=>`<option value="${esc(k)}">${esc(v)}</option>`).join("");
+  $("addForm").reset();$("addDlg").showModal()};
+$("addDlg").addEventListener("close",async()=>{if($("addDlg").returnValue!=="ok")return;const f=new FormData($("addForm"));
+  try{const j=await api("/api/action",{method:"POST",headers:{"Content-Type":"application/json","X-Studio":"1"},body:JSON.stringify({action:"add",title:f.get("title"),phase:f.get("phase"),owner:f.get("owner"),note:f.get("note")})});toast(j.msg);refresh()}catch(e){toast(e.message,true)}});
+refresh();setInterval(refresh,5000);
+</script>
+</body>
+</html>

@@ -1,0 +1,749 @@
+{
+  "title": "NHK会長編（ゆっくり縦ショートのサンプル）",
+  "updated": "2026-09-28 01:48",
+  "tasks": [
+    {
+      "id": "T01",
+      "slug": "リサーチ",
+      "phase": "リサーチ",
+      "title": "リサーチ・ファクト表",
+      "owner": "claude-main",
+      "status": "done",
+      "depends_on": [],
+      "inputs": [],
+      "outputs": [
+        "research/ファクト表.md",
+        "research/一次資料/"
+      ],
+      "acceptance": [
+        {
+          "type": "exists",
+          "path": "research/ファクト表.md"
+        },
+        {
+          "type": "exists",
+          "path": "research/一次資料/*.md",
+          "min": 2
+        }
+      ],
+      "user_gate": false,
+      "done_at": "2026-09-28 00:30",
+      "goal": "台本に出す事実を一次資料で確かめ、ファクト表にする。"
+    },
+    {
+      "id": "T02",
+      "slug": "台本v1",
+      "phase": "台本",
+      "title": "台本 v1",
+      "owner": "claude-main",
+      "status": "done",
+      "depends_on": [
+        "T01"
+      ],
+      "inputs": [
+        "research/ファクト表.md"
+      ],
+      "outputs": [
+        "台本_v1_NHK会長編.md"
+      ],
+      "acceptance": [
+        {
+          "type": "exists",
+          "path": "台本_v1_NHK会長編.md"
+        }
+      ],
+      "user_gate": true,
+      "done_at": "2026-09-27 23:40",
+      "note": "ユーザー「内容はいいですね」"
+    },
+    {
+      "id": "T03",
+      "slug": "台本のファクトチェック",
+      "phase": "台本",
+      "title": "台本のファクトチェック（別モデル）",
+      "owner": "codex-cli",
+      "sandbox": "read-only",
+      "status": "done",
+      "depends_on": [
+        "T02"
+      ],
+      "inputs": [
+        "台本_v1_NHK会長編.md",
+        "research/ファクト表.md",
+        "research/一次資料/放送法_第30・31・52条.md",
+        "research/一次資料/経営委員会_第1483回議事録_抜粋.md"
+      ],
+      "outputs": [],
+      "acceptance": [
+        {
+          "type": "report"
+        },
+        {
+          "type": "grep",
+          "path": "tasks/T03_台本のファクトチェック/報告.md",
+          "pattern": "合っている|言い過ぎ|違う|根拠なし",
+          "min": 6
+        }
+      ],
+      "user_gate": false,
+      "goal": "台本の事実の誤りと、耳で聞いて誤解を招く言い方を、台本を書いた Claude とは別のモデルの目で見つける。",
+      "do": [
+        "台本のナレーション（``` の中の14行）と「テロップの要点」の表・注記から、事実を言っている箇所をすべて拾う。",
+        "それぞれを research/一次資料/ の原文と照らして「合っている／言い過ぎ／違う／根拠なし」のどれかで判定する。報道だけが根拠のもの（ファクト表の「補強」）は、そうと分かるように書く。",
+        "耳で聞いて誤解されそうな言い方（例：総理大臣が一人で選ぶように聞こえる、視聴者が何もできないように聞こえる）を指摘し、直す案を1つずつ出す。",
+        "結果は表（行番号｜台本の言葉｜判定｜根拠の原文｜直す案）にして、報告の「やったこと」に入れる。ファイルは書かない（読み取りだけ）。"
+      ],
+      "dispatched_at": "2026-09-28 00:13",
+      "checks": [
+        {
+          "ok": true,
+          "what": "報告.md の状態が「完了」（いま：完了）"
+        },
+        {
+          "ok": true,
+          "what": "tasks/T03_台本のファクトチェック/報告.md に /合っている|言い過ぎ|違う|根拠なし/ が6回以上（31回）"
+        }
+      ],
+      "done_at": "2026-09-28 00:17",
+      "note": "指摘26項目。直すべき点は T16 で台本 v2 に反映"
+    },
+    {
+      "id": "T16",
+      "slug": "台本v2",
+      "phase": "台本",
+      "title": "台本 v2（ファクトチェックの反映）",
+      "owner": "claude-main",
+      "status": "done",
+      "depends_on": [
+        "T03"
+      ],
+      "inputs": [
+        "台本_v1_NHK会長編.md",
+        "tasks/T03_台本のファクトチェック/報告.md"
+      ],
+      "outputs": [
+        "台本_v2_NHK会長編.md"
+      ],
+      "acceptance": [
+        {
+          "type": "exists",
+          "path": "台本_v2_NHK会長編.md"
+        },
+        {
+          "type": "report"
+        }
+      ],
+      "user_gate": false,
+      "goal": "T03 の指摘のうち、受信料額に「2026年度予算」・「あと1人欠けたら」を賛成の数に限定・13/14行目と✗の図に「直接」の3点を反映する。",
+      "dispatched_at": "2026-09-28 00:23",
+      "checks": [
+        {
+          "ok": true,
+          "what": "台本_v2_NHK会長編.md が1個以上（1個）"
+        },
+        {
+          "ok": true,
+          "what": "報告.md の状態が「完了」（いま：完了）"
+        }
+      ],
+      "done_at": "2026-09-28 00:23",
+      "note": "Codex の指摘を反映。台本 v2（344字・約47秒）"
+    },
+    {
+      "id": "T04",
+      "slug": "台本の確定",
+      "phase": "台本",
+      "title": "台本の確定（ユーザー）",
+      "owner": "user",
+      "status": "done",
+      "depends_on": [
+        "T16"
+      ],
+      "inputs": [
+        "台本_v2_NHK会長編.md",
+        "tasks/T03_台本のファクトチェック/報告.md"
+      ],
+      "outputs": [],
+      "acceptance": [],
+      "user_gate": true,
+      "note": "6行目に井上樹彦会長の名前を入れる・約47秒のまま（チャットで決定）→ 台本_v2b_NHK会長編.md",
+      "done_at": "2026-09-28 00:28"
+    },
+    {
+      "id": "T05",
+      "slug": "絵_放送センターと会長",
+      "phase": "素材",
+      "title": "絵：放送センター・井上会長",
+      "owner": "codex-app",
+      "status": "review",
+      "depends_on": [
+        "T02"
+      ],
+      "dispatched_at": "2026-09-28 00:25",
+      "inputs": [
+        "台本_v1_NHK会長編.md",
+        "AGENTS.md"
+      ],
+      "outputs": [
+        "絵/NHK_JS_Paint素材_v2/"
+      ],
+      "acceptance": [
+        {
+          "type": "png",
+          "path": "絵/NHK_JS_Paint素材_v2/元サイズ/NHK_井上樹彦_*.png",
+          "size": [
+            360,
+            640
+          ],
+          "alpha": true,
+          "min": 2
+        },
+        {
+          "type": "png",
+          "path": "絵/NHK_JS_Paint素材_v2/元サイズ/NHK_放送センター_*.png",
+          "alpha": true
+        },
+        {
+          "type": "report"
+        }
+      ],
+      "user_gate": true,
+      "note": "v2 を 絵/ に取り込み済み。似ているかはユーザーの確認待ち（組み立ては v2 で先に進める）",
+      "goal": "台本で使う NHK 放送センターと井上会長の絵を JS Paint で描き、共有フォルダの 絵/ に置く。",
+      "do": [
+        "台本の「画面の素材」の表と AGENTS.md の「絵の仕様」を読む。",
+        "井上会長：ぽかん（普通）と困り顔（汗つき。7行目「ぎりぎりじゃない！」で使う）の2表情。360×640・透過・べた塗り・2枚で顔の位置をそろえる。",
+        "放送センター：透過 PNG（横長でよい。縦動画では真ん中の帯に置く）。公式ロゴの形は描かない。",
+        "仕上がった版を 絵/NHK_JS_Paint素材_v2/ にフォルダごと置く（元サイズ・透過PNG・manifest.json・はじめに.md）。参考にした写真は置かず、URL だけ はじめに.md に書く。"
+      ],
+      "checks": [
+        {
+          "ok": true,
+          "what": "絵/NHK_JS_Paint素材_v2/元サイズ/NHK_井上樹彦_v2_01_ぽかん.png OK"
+        },
+        {
+          "ok": true,
+          "what": "絵/NHK_JS_Paint素材_v2/元サイズ/NHK_井上樹彦_v2_02_困り顔.png OK"
+        },
+        {
+          "ok": true,
+          "what": "絵/NHK_JS_Paint素材_v2/元サイズ/NHK_放送センター_01.png OK"
+        },
+        {
+          "ok": true,
+          "what": "報告.md の状態が「完了」（いま：完了）"
+        }
+      ]
+    },
+    {
+      "id": "T06",
+      "slug": "図_席と矢印",
+      "phase": "素材",
+      "title": "図：12の席・3段の矢印・視聴者の家",
+      "owner": "codex-cli",
+      "sandbox": "workspace-write",
+      "status": "done",
+      "depends_on": [
+        "T02"
+      ],
+      "inputs": [
+        "台本_v1_NHK会長編.md",
+        "AGENTS.md"
+      ],
+      "outputs": [
+        "図/v1/"
+      ],
+      "acceptance": [
+        {
+          "type": "png",
+          "path": "図/v1/*.png",
+          "alpha": true,
+          "min": 6
+        },
+        {
+          "type": "exists",
+          "path": "図/v1/一覧.png"
+        },
+        {
+          "type": "report"
+        }
+      ],
+      "user_gate": false,
+      "goal": "台本の「自作の図」の表にある図を、透過 PNG の部品として作る（動きは後の Premiere 化で付けるので、ここでは静止画の差分でよい）。",
+      "do": [
+        "Python（Pillow）で描き、描くスクリプトも 図/v1/make_figures.py として残す（作り直せるように）。",
+        "12の席：4×3に並んだ席（人の形の簡単なアイコン）。1080×800・透過。差分は「全部暗い」「点灯1〜9（1つずつ増える）」「9つ目だけ消えた（8つ点灯）」の11枚。点灯は黄 #FFE600、暗い席はグレー。",
+        "3段の矢印：上から「顔のない人形（総理大臣）」→「12の席を縮めた形」→「空の枠（会長の絵を後で重ねる場所）」を下向きの矢印でつなぐ。1080×1300・透過。段ごとに別の PNG にもする（1段ずつ出すため）。",
+        "視聴者の家：小さな家の形 400×400・透過。点線の矢印（家から上へ伸びる）と赤 #F52222 の✗を別の PNG にする。",
+        "図には文字を入れない（文字はテロップで出す）。実在の人物に似せない。",
+        "全部を並べた確認用の 図/v1/一覧.png を作る。"
+      ],
+      "dispatched_at": "2026-09-28 00:13",
+      "checks": [
+        {
+          "ok": true,
+          "what": "図/v1/flow_01_pm.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/flow_02_committee.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/flow_03_chair_frame.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/flow_all.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/seats_00_dark.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/seats_01_lit.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/seats_02_lit.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/seats_03_lit.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/seats_04_lit.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/seats_05_lit.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/seats_06_lit.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/seats_07_lit.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/seats_08_lit.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/seats_09_lit.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/seats_10_ninth_off.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/viewer_arrow_up.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/viewer_cross.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/viewer_house.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/一覧.png OK"
+        },
+        {
+          "ok": true,
+          "what": "図/v1/一覧.png が1個以上（1個）"
+        },
+        {
+          "ok": true,
+          "what": "報告.md の状態が「完了」（いま：完了）"
+        }
+      ],
+      "done_at": "2026-09-28 00:19",
+      "note": "検収OK。3段図（flow_*）は部品が小さいので、spec で拡大するか v2 で大きく描き直す"
+    },
+    {
+      "id": "T07",
+      "slug": "スクショ_放送法52条",
+      "phase": "素材",
+      "title": "資料のスクショ：放送法52条（e-Gov）",
+      "owner": "claude-main",
+      "status": "done",
+      "depends_on": [
+        "T02"
+      ],
+      "inputs": [
+        "research/一次資料/放送法_第30・31・52条.md"
+      ],
+      "outputs": [
+        "スクショ/v1/"
+      ],
+      "acceptance": [
+        {
+          "type": "png",
+          "path": "スクショ/v1/*.png"
+        },
+        {
+          "type": "report"
+        }
+      ],
+      "user_gate": false,
+      "goal": "5行目で寄ってマーカーを引く、e-Gov の放送法52条の画面を撮る（法令は著作権の対象外）。",
+      "dispatched_at": "2026-09-28 00:31",
+      "checks": [
+        {
+          "ok": true,
+          "what": "スクショ/v1/放送法52条_e-Gov.png OK"
+        },
+        {
+          "ok": true,
+          "what": "報告.md の状態が「完了」（いま：完了）"
+        }
+      ],
+      "done_at": "2026-09-28 00:31",
+      "note": "e-Gov 52条（位置.json つき）"
+    },
+    {
+      "id": "T08",
+      "slug": "音声",
+      "phase": "音声",
+      "title": "ゆっくりボイスの音声",
+      "owner": "claude-main",
+      "status": "done",
+      "depends_on": [
+        "T04"
+      ],
+      "inputs": [
+        "台本_v2b_NHK会長編.md"
+      ],
+      "outputs": [
+        "音声/v1b/"
+      ],
+      "acceptance": [
+        {
+          "type": "exists",
+          "path": "音声/v1b/manifest.json"
+        },
+        {
+          "type": "report"
+        }
+      ],
+      "user_gate": false,
+      "goal": "yukkuri-voice で、説明役＝まりさ・聞き手＝れいむの音声を作り、Whisper で聞き取りを確かめる（9人・5900億円などの読み）。",
+      "dispatched_at": "2026-09-28 00:28",
+      "checks": [
+        {
+          "ok": true,
+          "what": "音声/v1b/manifest.json が1個以上（1個）"
+        },
+        {
+          "ok": true,
+          "what": "報告.md の状態が「完了」（いま：完了）"
+        }
+      ],
+      "done_at": "2026-09-28 00:29",
+      "note": "音声/v1b（36.7秒・14行とも聞き取り一致）"
+    },
+    {
+      "id": "T09",
+      "slug": "BGMと効果音",
+      "phase": "素材",
+      "title": "BGM・効果音の選定",
+      "owner": "claude-main",
+      "status": "done",
+      "depends_on": [
+        "T02"
+      ],
+      "inputs": [],
+      "outputs": [
+        "音/v1/"
+      ],
+      "acceptance": [
+        {
+          "type": "exists",
+          "path": "音/v1/選定.md"
+        },
+        {
+          "type": "report"
+        }
+      ],
+      "user_gate": false,
+      "goal": "公開リポジトリに載せられる規約の BGM・効果音を選び、規約の要点を選定.md に書く。",
+      "note": "甘茶「残業戦士」＋効果音26か所。音源はリポジトリに入れない",
+      "dispatched_at": "2026-09-28 00:53",
+      "checks": [
+        {
+          "ok": true,
+          "what": "音/v1/選定.md が1個以上（1個）"
+        },
+        {
+          "ok": true,
+          "what": "報告.md の状態が「完了」（いま：完了）"
+        }
+      ],
+      "done_at": "2026-09-28 00:53"
+    },
+    {
+      "id": "T10",
+      "slug": "spec",
+      "phase": "編集",
+      "title": "spec.json（Premiere の設計図）",
+      "owner": "claude-main",
+      "status": "done",
+      "depends_on": [
+        "T06",
+        "T07",
+        "T08"
+      ],
+      "inputs": [
+        "台本_v2b_NHK会長編.md",
+        "絵/NHK_JS_Paint素材_v2/",
+        "図/v1/",
+        "スクショ/v1/",
+        "音声/v1b/",
+        "音/v1/"
+      ],
+      "outputs": [
+        "premiere/v1/spec.json"
+      ],
+      "acceptance": [
+        {
+          "type": "exists",
+          "path": "premiere/v1/spec.json"
+        },
+        {
+          "type": "report"
+        }
+      ],
+      "user_gate": false,
+      "note": "premiere/v1/spec.json（make_spec.py で生成）",
+      "dispatched_at": "2026-09-28 00:35",
+      "checks": [
+        {
+          "ok": true,
+          "what": "premiere/v1/spec.json が1個以上（1個）"
+        },
+        {
+          "ok": true,
+          "what": "報告.md の状態が「完了」（いま：完了）"
+        }
+      ],
+      "done_at": "2026-09-28 00:42"
+    },
+    {
+      "id": "T11",
+      "slug": "XMLビルド",
+      "phase": "編集",
+      "title": "Premiere XML のビルド",
+      "owner": "claude-main",
+      "status": "done",
+      "depends_on": [
+        "T10"
+      ],
+      "inputs": [
+        "premiere/v1/spec.json"
+      ],
+      "outputs": [
+        "Premiere読み込み用/NHK会長編_v1/"
+      ],
+      "allow_existing": true,
+      "acceptance": [
+        {
+          "type": "exists",
+          "path": "Premiere読み込み用/NHK会長編_v1/00_これを読み込む_NHK会長編.xml"
+        },
+        {
+          "type": "report"
+        }
+      ],
+      "user_gate": false,
+      "goal": "premiere-short-xml の build_all.py → preview_video.py → export_package.py。",
+      "dispatched_at": "2026-09-28 00:42",
+      "checks": [
+        {
+          "ok": true,
+          "what": "Premiere読み込み用/NHK会長編_v1/00_これを読み込む_NHK会長編.xml が1個以上（1個）"
+        },
+        {
+          "ok": true,
+          "what": "報告.md の状態が「完了」（いま：完了）"
+        }
+      ],
+      "done_at": "2026-09-28 00:42",
+      "note": "最新は Premiere読み込み用/NHK会長編_v1c（BGM・効果音入り・42.2秒）。v1 と _v1c_BGMなし は途中の版"
+    },
+    {
+      "id": "T12",
+      "slug": "プレビュー点検",
+      "phase": "検収",
+      "title": "プレビューの点検（別モデル）",
+      "owner": "codex-cli",
+      "sandbox": "read-only",
+      "status": "done",
+      "depends_on": [
+        "T11"
+      ],
+      "inputs": [
+        "premiere/v1/確認_見た目_v1_全体.png",
+        "premiere/v1/timeline.json",
+        "台本_v2b_NHK会長編.md",
+        "AGENTS.md",
+        "~/.claude/skills/premiere-short-xml/references/design_rules.md"
+      ],
+      "outputs": [],
+      "acceptance": [
+        {
+          "type": "report"
+        }
+      ],
+      "user_gate": false,
+      "goal": "確認用の並べ画像（45フレームおき）を見て、テロップと顔・図の重なり、読めない文字、下1/3の出典、台本との食い違い、事実の言い過ぎを、組み立てた Claude とは別の目で指摘する。",
+      "do": [
+        "premiere/v1/確認_見た目_v1_全体.png を開いて、コマごとに見る（各コマの左上に フレーム数と時刻）。",
+        "design_rules.md の配置の決まり（下1/3は出典、テロップは真ん中が基本で顔を見せる拍だけ下げる、顔にテロップを意味なく重ねない）と照らす。",
+        "テロップの文字が台本 v2b のナレーションと食い違っていないか、事実を言い過ぎていないかを見る。",
+        "見つけたことを表（フレーム｜何が問題か｜直す案｜重さ：必ず直す／直した方がよい／好み）にして報告に入れる。ファイルは書かない。"
+      ],
+      "dispatched_at": "2026-09-28 00:42",
+      "checks": [
+        {
+          "ok": true,
+          "what": "報告.md の状態が「完了」（いま：完了）"
+        }
+      ],
+      "done_at": "2026-09-28 00:53",
+      "note": "指摘9件のうち7件を v1c に反映（題名の位置・8行目の出典・図の中の文字・経営委員会の表示・イラスト注記・注記の短縮・締めの限定）。9〜14行目のテロップ位置と尺は理由を付けて据え置き"
+    },
+    {
+      "id": "T13",
+      "slug": "Premiere確認",
+      "phase": "検収",
+      "title": "Premiere で確認（ユーザー）",
+      "owner": "user",
+      "status": "todo",
+      "depends_on": [
+        "T12"
+      ],
+      "inputs": [
+        "Premiere読み込み用/NHK会長編_v2/"
+      ],
+      "outputs": [],
+      "acceptance": [],
+      "user_gate": true,
+      "note": "最新は v2（動く背景・生成BGM）。新規プロジェクトの保存場所を Premiere読み込み用/NHK会長編_v2 にして読み込む。似顔絵（T05）もここで判断"
+    },
+    {
+      "id": "T14",
+      "slug": "概要欄",
+      "phase": "公開",
+      "title": "概要欄・出典",
+      "owner": "claude-main",
+      "status": "done",
+      "depends_on": [
+        "T04"
+      ],
+      "inputs": [
+        "research/ファクト表.md"
+      ],
+      "outputs": [
+        "公開/概要欄.md"
+      ],
+      "acceptance": [
+        {
+          "type": "exists",
+          "path": "公開/概要欄.md"
+        },
+        {
+          "type": "report"
+        }
+      ],
+      "user_gate": false,
+      "dispatched_at": "2026-09-28 00:31",
+      "checks": [
+        {
+          "ok": true,
+          "what": "公開/概要欄.md が1個以上（1個）"
+        },
+        {
+          "ok": true,
+          "what": "報告.md の状態が「完了」（いま：完了）"
+        }
+      ],
+      "done_at": "2026-09-28 00:31",
+      "note": "BGM のクレジットは T09 のあと"
+    },
+    {
+      "id": "T15",
+      "slug": "GitHub公開準備",
+      "phase": "公開",
+      "title": "GitHub に公開（ユーザーの判断）",
+      "owner": "claude-main",
+      "status": "todo",
+      "depends_on": [
+        "T13",
+        "T14"
+      ],
+      "inputs": [],
+      "outputs": [],
+      "acceptance": [
+        {
+          "type": "report"
+        }
+      ],
+      "user_gate": true,
+      "goal": "個人のパス・選挙の参照・一次資料の扱いを見直し、公開するものとしないもの（.gitignore）を決める。",
+      "memos": [
+        {
+          "at": "2026-09-28 00:29",
+          "by": "統括",
+          "text": "AquesTalk（ゆっくりボイス）の音声・BGM の音源ファイルをリポジトリに入れてよいか、規約を確認する（BGM は二次配布禁止の規約が多い）"
+        },
+        {
+          "at": "2026-09-28 00:42",
+          "by": "統括",
+          "text": "Premiere読み込み用/（519MB）と premiere/v1/media*・音声 WAV はリポジトリに入れない（.gitignore）"
+        },
+        {
+          "at": "2026-09-28 01:08",
+          "by": "統括",
+          "text": "ElevenLabs で生成した BGM（音/v2/bgm_v2_*.mp3）もリポジトリに入れない（契約プランの規約に従う）。plan_v2.json と生成の手順だけ入れる"
+        }
+      ],
+      "note": "公開（リモート作成・push）はユーザーがOKしてから。決めること：似顔絵PNGを入れるか・サンプル動画を載せるか・名前とライセンス"
+    },
+    {
+      "id": "T17",
+      "slug": "v2_動く背景とBGM",
+      "phase": "編集",
+      "title": "v2：動く背景・ElevenLabs の BGM",
+      "owner": "claude-main",
+      "status": "done",
+      "depends_on": [
+        "T11"
+      ],
+      "inputs": [
+        "premiere/v1/make_bg_anim.py",
+        "音/v2/plan_v2.json"
+      ],
+      "outputs": [
+        "Premiere読み込み用/NHK会長編_v2/",
+        "音/v2/"
+      ],
+      "acceptance": [
+        {
+          "type": "exists",
+          "path": "Premiere読み込み用/NHK会長編_v2/00_これを読み込む_NHK会長編_v2.xml"
+        }
+      ],
+      "user_gate": false,
+      "done_at": "2026-09-28 01:08",
+      "note": "ユーザー「背景の動きが全く無いのがさみしい」「BGMはElevenlabsで生成」。背景は make_bg_anim.py（光の帯・放射・粒・走査線・拍の脈・山場の集中線・ワイプ）。BGM は music_v2 で2本（計 約$0.21、ユーザー承認）→ B を採用"
+    }
+  ]
+}

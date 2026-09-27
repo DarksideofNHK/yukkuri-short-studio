@@ -1,0 +1,113 @@
+{
+ "chunks": [
+  {
+   "text": "[Intro]\n{big hit on the very first beat}\n{driving drums and bass from bar one}",
+   "duration_ms": 8500,
+   "positive_styles": [
+    "energetic Japanese variety-show explainer BGM",
+    "150 BPM",
+    "punchy electronic drums",
+    "synth bass",
+    "bright plucky synth lead",
+    "catchy, playful but tense",
+    "instrumental",
+    "tight dry mix that leaves room for a voice",
+    "great production quality",
+    "playful question-like synth motif"
+   ],
+   "negative_styles": [
+    "vocals",
+    "lyrics",
+    "choir",
+    "long reverb tails",
+    "slow tempo",
+    "lo-fi",
+    "fade in",
+    "quiet intro"
+   ],
+   "context_adherence": "high"
+  },
+  {
+   "text": "[Build-up]\n{snare roll}\n{rising synth riser}\n{one beat of near silence at the end}",
+   "duration_ms": 5000,
+   "positive_styles": [
+    "tension build",
+    "150 BPM",
+    "snare roll",
+    "riser"
+   ],
+   "negative_styles": [
+    "vocals",
+    "lyrics",
+    "choir",
+    "long reverb tails",
+    "slow tempo",
+    "lo-fi",
+    "drop"
+   ],
+   "context_adherence": "high"
+  },
+  {
+   "text": "[Drop]\n{big drop on the first beat}",
+   "duration_ms": 8300,
+   "positive_styles": [
+    "full energy drop",
+    "150 BPM",
+    "heavy kick",
+    "stabbing synth chords",
+    "dramatic"
+   ],
+   "negative_styles": [
+    "vocals",
+    "lyrics",
+    "choir",
+    "long reverb tails",
+    "slow tempo",
+    "lo-fi",
+    "breakdown"
+   ],
+   "context_adherence": "high"
+  },
+  {
+   "text": "[Drive]",
+   "duration_ms": 15100,
+   "positive_styles": [
+    "keeps momentum",
+    "150 BPM",
+    "slightly darker minor-key variation",
+    "steady groove",
+    "mid energy so narration stays clear"
+   ],
+   "negative_styles": [
+    "vocals",
+    "lyrics",
+    "choir",
+    "long reverb tails",
+    "slow tempo",
+    "lo-fi",
+    "new melody that competes with a voice"
+   ],
+   "context_adherence": "high"
+  },
+  {
+   "text": "[Ending]\n{one big final hit at the start}\n{short punchy sting}\n{clean stop}",
+   "duration_ms": 5400,
+   "positive_styles": [
+    "final hit",
+    "150 BPM",
+    "punchy ending sting",
+    "clean stop"
+   ],
+   "negative_styles": [
+    "vocals",
+    "lyrics",
+    "choir",
+    "long reverb tails",
+    "slow tempo",
+    "lo-fi",
+    "long fade out"
+   ],
+   "context_adherence": "high"
+  }
+ ]
+}
